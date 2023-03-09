@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-
-const leaveSchema = mongoose.Schema({
+const leaveSchema = new mongoose.Schema({
   fromDate: {
     type: Date,
     required: true,
@@ -24,13 +23,12 @@ const leaveSchema = mongoose.Schema({
     enum: ["casual leave", "optional leave", "maternity leave", "sick leave"],
   },
   approver: {
-    name: String,
+    userId: String,
     email: String,
   },
   employee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Employee",
-    required: true,
   },
 });
 mongoose.model("Leave", leaveSchema);

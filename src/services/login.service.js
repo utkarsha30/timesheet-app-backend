@@ -6,13 +6,13 @@ const getEmployeeById = (id) => {
   const empId = mongoose.Types.ObjectId(id);
   return Login.findById(empId).populate("employee");
 };
-const postnewLogin = (bodyDetails) => {
-  return Login.create(bodyDetails);
+const postnewLogin = (details) => {
+  return Login.create(details);
 };
 const validateUser = async (loginCredentials) => {
   const user = await Login.findOne({
     email: loginCredentials.email,
-  });
+  }).populate("employee");
   if (!user) {
     return null;
   }

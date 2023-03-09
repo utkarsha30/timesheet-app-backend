@@ -17,12 +17,6 @@ const projectSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  tasks: [
-    {
-      name: String,
-      //to stop creating id for subdocuments
-      _id: false,
-    },
-  ],
+  tasks: [String],
 });
 mongoose.model("Project", projectSchema);

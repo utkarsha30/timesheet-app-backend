@@ -26,7 +26,6 @@ const attendanceSchema = mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
-      required: true,
       //to stop creating id for subdocuments
       _id: false,
     },

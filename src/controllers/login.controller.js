@@ -25,7 +25,7 @@ const getEmployeeById = async (req, res, next) => {
     });
   }
 };
-const postNewLogin = async (req, res) => {
+const postNewLogin = async (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
     return res.status(400).json({
       status: "error",
@@ -35,7 +35,15 @@ const postNewLogin = async (req, res) => {
 
   try {
     const { email, password } = req.body;
-    const empId = await employeeService.getEmpByEmail(email);
+    const emp = await employeeService.getAllUsers();
+    let empId = "";
+    // console.log(emp);
+    emp.forEach((employee) => {
+      if (employee.email === email) {
+        empId = employee._id;
+      }
+    });
+
     if (!empId) {
       const error = new Error(`Employee with ${email} does not exist`);
       error.name = Errors.NotFound;
@@ -43,9 +51,9 @@ const postNewLogin = async (req, res) => {
     }
 
     const newLogin = await loginService.postnewLogin({
-      email,
-      password,
-      empId,
+      email: email,
+      password: password,
+      employee: empId,
     });
     res.status(201).json({
       status: "success",
@@ -74,11 +82,14 @@ const validateUser = async (req, res, next) => {
         message: `Invalid credentials, `,
       });
     }
+    console.log("email", user);
     //generate JWT
     const claims = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
+      _id: user.employee._id,
+      name: user.employee.name,
+      email: user.employee.email,
+      role: user.employee.role,
+      approver: user.employee.reportingSupervisor,
     };
     JWT.sign(
       claims,
@@ -89,10 +100,13 @@ const validateUser = async (req, res, next) => {
           err.name = Errors.InternalServerError;
           return next(err);
         }
+        console.log(user);
         res.json({
-          id: user._id,
-          name: user.name,
-          email: user.email,
+          id: user.employee._id,
+          name: user.employee.name,
+          email: user.employee.email,
+          role: user.employee.role,
+          approver: user.employee.reportingSupervisor,
           token,
         });
       }

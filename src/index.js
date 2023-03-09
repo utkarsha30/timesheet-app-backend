@@ -21,6 +21,8 @@ app.get("/", (req, res) => {
 //routes
 app.use("/login", require("./routes/login.routes"));
 app.use("/employee", require("./routes/employee.routes"));
+app.use("/projectcode", require("./routes/project.routes"));
+app.use("/leavecode", require("./routes/leave.routes"));
 app.use(require("./middelware/errors").resourceNotFound);
 app.use(require("./middelware/errors").errorHandler);
 
